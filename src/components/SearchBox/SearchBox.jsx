@@ -1,13 +1,18 @@
 import css from "./SearchBox.module.css";
 
 export default function SearchBox() {
-  const handleInput = (event) => {
-    console.log(event.target.value);
+  // const handleInput = (event) => {
+  //   console.log({
+  //     contactSearch: event.target.value,
+  //   });
+  // };
+  const handleSearch = (event) => {
+    console.log({ contactSearch: event.target.value });
   };
   return (
     <>
-      <p>Find contacts by name</p>
-      <input type="text" name="search" onChange={handleInput}></input>
+      <label>Find contacts by name</label>
+      <input type="text" name="search" onChange={handleSearch}></input>
     </>
   );
 }
