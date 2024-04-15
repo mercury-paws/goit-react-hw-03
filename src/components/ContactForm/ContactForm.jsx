@@ -11,7 +11,7 @@ const UserSchema = Yup.object().shape({
     .required("Required"),
   number: Yup.string()
     .matches(
-      /^\d{2}-\d{2}-\d{2}$/,
+      /^(?:\d{3}-\d{2}-\d{2}|\d{2}-\d{2}-\d{2})$/,
       "Number must be in the format 777-77-77 or 77-77-77"
     )
     .required("Number is required"),
