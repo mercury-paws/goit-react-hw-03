@@ -1,26 +1,53 @@
 import css from "./ContactForm.module.css";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useId } from "react";
+import { nanoid } from "nanoid";
 
-export default function ContactForm() {
-  const handleSubmit = (event) => {
-    console.log({
-      name: event.target.value,
-      number: event.target.elements.number.value,
-    });
+const UserSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(3, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+  number: Yup.string()
+    .matches(
+      /^\d{2}-\d{2}-\d{2}$/,
+      "Number must be in the format 777-77-77 or 77-77-77"
+    )
+    .required("Number is required"),
+});
+
+export default function ContactForm({ onAdd }) {
+  const contactId = nanoid();
+  const handleSubmit = (values, actions) => {
+    const newContact = {
+      id: contactId,
+      name: values.name,
+      number: values.number,
+    };
+
+    onAdd(newContact);
+    actions.resetForm();
   };
 
   return (
     <>
       <Formik
-        initialValues={{ name: "name", number: "" }}
+        initialValues={{
+          name: "Name",
+          number: "77-77-77",
+        }}
+        validationSchema={UserSchema}
         onSubmit={handleSubmit}
       >
-        <Form>
-          <label>Name</label>
-          <Field type="text" name="name" />
-          <label>Number</label>
-          <Field type="number" name="number" />
-          <button onSubmit={handleSubmit} type="submit">
+        <Form className={css.form} id={contactId}>
+          <label htmlFor={contactId}>Name:</label>
+          <Field id={contactId} name="name" />
+          <ErrorMessage className={css.error} name="name" component="span" />
+          <label htmlFor={contactId}>Number:</label>
+          <Field id={contactId} type="text" name="number" />
+          <ErrorMessage className={css.error} name="number" component="span" />
+          <button className={css.btn} type="submit">
             Add contact
           </button>
         </Form>
